@@ -20,4 +20,4 @@ git clone https://github.com/KhaledEOmar/newsdata.git
 
 
 # Starting the Reporting Tool
-In Bash window, run ```Vagrant Up``` or ```winpty Vagrant Up``` and then Python loganalysis.py
+In Bash window, run ```Vagrant Up``` or ```winpty Vagrant Up``` and then ```Python loganalysis.py```
