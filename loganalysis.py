@@ -1,11 +1,15 @@
+#!/usr/bin/env python
+"""Log Analysis is a SQL reporting tool to analyze the News database."""
 import psycopg2
 
 
 def main():
+        """Main Function runs flow of program."""
         db = psycopg2.connect("dbname=news")
 
         cursor = db.cursor()
-
+        f = open('output.txt', 'w')
+        s = ""
         print "Connected!\n\n"
 
         cursor.execute("""SELECT Articles.Title, x.count from
@@ -16,10 +20,13 @@ def main():
                         LEFT JOIN Articles ON x.path = Articles.Slug
                         ORDER BY count DESC;""")
         topThree = cursor.fetchall()
-        print "\n\n                    Top 3 Articles                   "
-        print "-----------------------------------------------------"
+        s += "                    Top 3 Articles                   "
+        s += "\n-----------------------------------------------------\n"
         for article in topThree:
-                print article[0], " - ", article[1], " views"
+                s += str(article[0])
+                s += " - "
+                s += str(article[1])
+                s += " views\n"
 
         cursor.execute("""Select z.name as name, SUM(z.viewCount) from
                         (SELECT Authors.Name, y.viewCount from
@@ -32,10 +39,13 @@ def main():
                         INNER JOIN Authors ON y.author = Authors.id) as z
                         GROUP BY name ORDER BY sum DESC;""")
         topAuthors = cursor.fetchall()
-        print "\n\n                      Top  Authors                   "
-        print "-----------------------------------------------------"
+        s += "\n\n                      Top  Authors                   "
+        s += "\n-----------------------------------------------------\n"
         for author in topAuthors:
-                print author[0], " - ", author[1], " views"
+                s += str(author[0])
+                s += " - "
+                s += str(author[1])
+                s += " views\n"
 
         cursor.execute("""Select timez, Percent from (SELECT timez, (100.00 *
         Errors/Total) as Percent from (SELECT date_trunc('day',time) as timez,
@@ -43,11 +53,16 @@ def main():
         Errors, count(status) as Total from log GROUP BY timez ORDER BY timez)
         as Totals) as Percentage WHERE Percent >= 1.00;""")
         highErrors = cursor.fetchall()
-        print "\n\n                   High Error Days                   "
-        print "-----------------------------------------------------"
+        s += "\n\n                   High Error Days                   "
+        s += "\n-----------------------------------------------------\n"
         for errors in highErrors:
-                print errors[0].strftime('%b %d, %Y'), " - ",\
-                      "{0:.2f}".format(errors[1]), "% errors"
-
+                s += str(errors[0].strftime('%b %d, %Y'))
+                s += " - "
+                s += str("{0:.2f}".format(errors[1]))
+                s += "% errors\n"
+        f.write(s)
+        f.close()
         db.close()
+
+
 main()
