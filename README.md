@@ -18,8 +18,6 @@ git clone https://github.com/udacity/fullstack-nanodegree-vm
 git clone https://github.com/KhaledEOmar/newsdata.git
 ```
 
-5. Open two Git Bash windows
 
 # Starting the Reporting Tool
-1. In first Bash window, run psql -d news
-2. In second Bash window, run Python loganalysis.py
+In Bash window, run ```Vagrant Up``` or ```winpty Vagrant Up``` and then Python loganalysis.py
